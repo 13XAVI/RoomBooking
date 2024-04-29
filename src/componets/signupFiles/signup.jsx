@@ -3,6 +3,7 @@ import axios from "axios";
 import "./signup.scss";
 import useFetch from "../../hooks/useFetch";
 import 'bootstrap/dist/css/bootstrap.min.css';
+import authService from "../Services/authService";
 
 
 function Signup() {
@@ -33,7 +34,7 @@ function Signup() {
         {
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${process.env.REACT_APP_TOKEN}`,
+            Authorization: `Bearer ${authService.getToken()}`,
           },
         }
       );

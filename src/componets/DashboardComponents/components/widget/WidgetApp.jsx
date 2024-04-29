@@ -1,53 +1,53 @@
-import React from 'react';
-import './Widget.scss';
-import { IoIosArrowUp } from 'react-icons/io';
-import { IoIosPerson } from 'react-icons/io';
-import { MdRoomPreferences } from 'react-icons/md';
-import { MdNoMeetingRoom } from 'react-icons/md';
-import { Link } from 'react-router-dom';
+import React from "react";
+import "./Widget.scss";
+import { IoIosArrowUp } from "react-icons/io";
+import { IoIosPerson } from "react-icons/io";
+import { MdRoomPreferences } from "react-icons/md";
+import { MdNoMeetingRoom } from "react-icons/md";
+import { Link } from "react-router-dom";
 
 function Widget({ type, dataLength }) {
   let data;
   const diff = 50;
 
   switch (type) {
-    case 'User':
+    case "User":
       data = {
-        title: 'List-users',
+        title: "List-users",
         isMoney: false,
-        link: '/users/ListAllusers',
+        link: "/users/ListAllusers",
         icon: (
           <IoIosPerson
             className="icon"
-            style={{ background: 'rgba(0,128,0,0.2)', color: 'green' }}
+            style={{ background: "rgba(0,128,0,0.2)", color: "green" }}
           />
         ),
       };
       break;
 
-    case 'ARoom':
+    case "ARoom":
       data = {
-        title: 'Available Room',
+        title: "Available Room",
         isMoney: false,
-        link: '/Rooms/List-Availble-Rooms',
+        link: "/Rooms/List-Availble-Rooms",
         icon: (
           <MdRoomPreferences
             className="icon"
-            style={{ background: 'rgba(0,128,0,0.2)', color: 'purple' }}
+            style={{ background: "rgba(0,128,0,0.2)", color: "purple" }}
           />
         ),
       };
       break;
 
-    case 'BRoom':
+    case "BRoom":
       data = {
-        title: 'List-Booked-Room',
+        title: "List-Booked-Room",
         isMoney: false,
-        link: '/Rooms/List-Booked-Rooms',
+        link: "/Rooms/List-Booked-Rooms",
         icon: (
           <MdNoMeetingRoom
             className="icon"
-            style={{ background: 'rgba(128,0,128,0.2)', color: 'purple ' }}
+            style={{ background: "rgba(128,0,128,0.2)", color: "purple " }}
           />
         ),
       };
@@ -55,9 +55,9 @@ function Widget({ type, dataLength }) {
 
     default:
       data = {
-        title: 'Unknown Type',
+        title: "Unknown Type",
         isMoney: false,
-        link: 'Unknown Link',
+        link: "Unknown Link",
         icon: <div className="icon">?</div>,
       };
       break;
@@ -78,10 +78,10 @@ function Widget({ type, dataLength }) {
         </span>
       </div>
       <div className="right">
-        <div className="percentage">
+        {/* <div className="percentage">
           <IoIosArrowUp />
           {diff}%
-        </div>
+        </div> */}
         {data.icon}
       </div>
     </div>

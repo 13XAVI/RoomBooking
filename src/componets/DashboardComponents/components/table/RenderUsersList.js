@@ -6,11 +6,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { CSVLink } from 'react-csv';
 import authService from '../../../Services/authService';
 import { faEdit, faPrint, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
-import ReactHTMLTableToExcel from 'react-html-table-to-excel'; // Import ReactHTMLTableToExcel
-import Dialog from '@mui/material/Dialog'; // Import Dialog
-import DialogContent from '@mui/material/DialogContent'; // Import DialogContent
-import UserEditPopup from './UserEditPopup'; // Import UserEditPopup
-import EditRoom from '../../../cards/Editroom'; // Import EditRoom
+import ReactHTMLTableToExcel from 'react-html-table-to-excel'; 
+import Dialog from '@mui/material/Dialog'; 
+import DialogContent from '@mui/material/DialogContent'; 
+import UserEditPopup from './UserEditPopup'; 
+import EditRoom from '../../../cards/Editroom'; 
 import { jwtDecode as jwt_decode } from 'jwt-decode';
 
 function RenderUsers({ title }) {
@@ -21,6 +21,12 @@ function RenderUsers({ title }) {
   const [successMessage, setSuccessMessage] = useState(null);
   const [page, setPage] = useState(1);
   const [allusers, setAllusers] = useState([]);
+  const [clickedUser,setClickedUser]=useState([])
+  const [editPopupVisible, setEditPopupVisible] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+const [userToDelete, setUserToDelete] = useState([]);
+const [nonPaginateUSer,setNonPaginateUSer]= useState([])
+
 
   const navigate = useNavigate();
 
@@ -33,15 +39,19 @@ function RenderUsers({ title }) {
     }
     return list;
   };
-  
   const fetchData = useFetch({
     url: process.env.REACT_APP_FETCH_USER_DATA_URL,
   });
+  useEffect(()=>{
+    
+  },[])
   
   useEffect(() => {
     if (fetchData.data) {
+      setNonPaginateUSer(fetchData.data);
       const chunks = HandleList(fetchData.data);
       setAllusers(chunks);
+
     }
   }, [fetchData.data]);
   
@@ -68,6 +78,14 @@ function RenderUsers({ title }) {
     }
   };
 
+  const handleNextPage = () => {
+    setPage((prevPage) => Math.min(prevPage + 1, allusers.length));
+  };
+  
+  const handlePreviousPage = () => {
+    setPage((prevPage) => Math.max(prevPage - 1, 1));
+  };
+
   const handleSort = () => {
     const sortedData = [...allusers[page - 1]];
     sortedData.sort((a, b) => {
@@ -86,13 +104,66 @@ function RenderUsers({ title }) {
     window.print();
   };
 
-  const handleEdit = (item) => {
-    // Implement edit functionality
-  };
+  const handleFormLoad = () => {
+    setEditPopupVisible(!editPopupVisible);
+   
+};
 
-  const handleDelete = (item) => {
-    // Implement delete functionality
+  const handleEdit = (item) => {
+   console.log("user Item",item)
+    setClickedUser(item);
+    setEditPopupVisible(true)
   };
+  
+  const openDeleteDialog = (user) => {
+    console.log("consoledUnitxcvbv",user)
+    setUserToDelete(user);
+    setDeleteDialogOpen(true);
+  };
+  
+  const closeDeleteDialog = () => {
+    setDeleteDialogOpen(false);
+    setUserToDelete(null); 
+  };
+  
+
+  const handleDelete = async (userToDelete) => {
+    try {
+      const deleteUrl = `${process.env.REACT_APP_DELETE_USER}/?staffID=${userToDelete.staffID}`;
+  
+      const response = await fetch(deleteUrl,
+        {
+          method: 'delete',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${authService.getToken()}`
+          },
+          
+        }
+        
+      );
+  
+      if (response.status === 200) {
+        setSuccessMessage('User deleted successfully.');
+  
+        const updatedUsers = nonPaginateUSer.filter((u) => u.staffID !== userToDelete.staffID );
+        console.log(updatedUsers,"sdfas",userToDelete)
+        setAllusers(HandleList(updatedUsers)); 
+        setNonPaginateUSer(updatedUsers)
+        
+
+
+      } else {
+        setError('An error occurred while trying to delete the user.');
+      }
+    } catch (error) {
+      console.error('Error deleting user:', error);
+      setError(error.message || 'An error occurred while trying to delete the user.');
+    }
+  };
+  
+  
+  
 
   console.log("all user",allusers)
 
@@ -166,6 +237,8 @@ function RenderUsers({ title }) {
         )
   )
   .map((item) => (
+
+                
                 <tr key={item.staffID}>
                   <td>{item.staffID}</td>
                   <td>{item.fullnames}</td>
@@ -185,15 +258,56 @@ function RenderUsers({ title }) {
                     <button type="button" className="btn btn-success" onClick={() => handleEdit(item)}>
                       <FontAwesomeIcon icon={faEdit} className="s-icons" />
                     </button>
-                    <button type="button" className="btn btn-danger" onClick={() => handleDelete(item)}>
+                    <button type="button" className="btn btn-danger" onClick={() => openDeleteDialog(item)}>
                       <FontAwesomeIcon icon={faTrashAlt} className="s-icons" />
                     </button>
+
                   </td>
                 </tr>
               ))}
           </tbody>
         </table>
       </div>
+
+      <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
+      <button onClick={handlePreviousPage} disabled={page === 1}>
+        Previous
+      </button>
+      <span style={{ marginTop:"20px"}}>Page {page} of {allusers.length}</span>
+      <button onClick={handleNextPage} disabled={page === allusers.length}>
+        Next
+      </button>
+
+      {editPopupVisible && (
+                            <Dialog open={editPopupVisible} onClose={handleFormLoad} maxWidth="80%" >
+                                <DialogContent>
+                                  
+                               
+                                        <div title={title}>
+                                        
+                                                <UserEditPopup title="Edit Room"   clickedUser={clickedUser} />
+                                            
+                                         
+                                        </div>
+                                    
+                                </DialogContent>
+                            </Dialog>
+                        )}
+
+<Dialog open={deleteDialogOpen} onClose={closeDeleteDialog}>
+  <DialogContent>
+    <div>Are you sure you want to delete this user?</div>
+    <div style={{ marginTop: '20px', display: 'flex', justifyContent: 'flex-end' }}>
+      <button onClick={() => {
+        handleDelete(userToDelete); 
+        closeDeleteDialog();
+      }}>Delete</button>
+      <button onClick={closeDeleteDialog} style={{ marginLeft: '10px' }}>Cancel</button>
+    </div>
+  </DialogContent>
+</Dialog>
+
+    </div>
     </div>
   );
 }

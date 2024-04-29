@@ -1,7 +1,8 @@
 .table-container {
-  height: 100vh;
+  height: auto;
   margin-top: -10px;
   overflow-x: auto;
+  padding:20px  ;
 }
 
 .button-cell {
@@ -120,6 +121,11 @@ body.active-model {
     background-color: #ddd; 
     color: #333; 
     cursor: not-allowed;
+  }
+
+
+  .table .table-striped .table-bordered{
+    padding-left: 20px;
   }
   
 

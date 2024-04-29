@@ -4,11 +4,12 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
 
-function EditRoom({ title,roomId }) {
+function EditRoom({ title,roomId,clickedItem}) {
   const [selectedImage, setSelectedImage] = useState(null);
   const [error, setError] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
   const [formInputs, setFormInputs] = useState({
+    selectedImage:"",
     roomLocation: '',
     capacity: 0,
     roomDescription: '',

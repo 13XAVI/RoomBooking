@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router";
 import axiosInstance from "../../Axios/axios";
+import axios from "axios"
 import { jwtDecode as jwt_decode } from 'jwt-decode';
 
 
@@ -12,6 +13,7 @@ const setToken = (token)=>{
 }
 const getToken = ()=>{
     const token = localStorage.getItem('token');
+    console.log("Token in get",token)
     if(token){
         return token;
     }
@@ -19,7 +21,8 @@ const getToken = ()=>{
 }
 
 const login=(credentials)=>{
-    return axiosInstance.post(`${process.env.REACT_APP_SIGIN}`,credentials)
+    
+    return axios.post(`${process.env.REACT_APP_SIGIN}`,credentials)
 }
 
 const getUserEmail = ()=>{

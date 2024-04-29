@@ -17,7 +17,7 @@ const CardForm = ({ roomNames, closeRoom,clickedRoom }) => {
   const [error, setError] = useState(null);
   const [selectedView, setSelectedView] = useState('dayGridMonth');
   const [selectedRoom, setSelectedRoom] = useState({
-    roomID: clickedRoom,
+    roomID: clickedRoom.roomID,
     userID: "",
     startTime: "",
     endTime: "",
@@ -25,7 +25,6 @@ const CardForm = ({ roomNames, closeRoom,clickedRoom }) => {
   });
   const [successMessage, setSuccessMessage] = useState(null);
   const [roomData, setRoomData] = useState([]);
-  const [userData, setUserData] = useState([]);
   const [inptform, setInptForm] = useState([]);
   const userInfo = authService.getUserInfo();
   const [selectedRoomImage, setSelectedRoomImage] = useState('');
@@ -48,23 +47,19 @@ const CardForm = ({ roomNames, closeRoom,clickedRoom }) => {
           return;
         }
 
-        const roomResponse = await axiosInstance.get(
+        const roomResponse = await axios.get(
           process.env.REACT_APP_FETCH_ROOMS
         );
 
-        const userResponse = await axiosInstance.get(
-          process.env.REACT_APP_FETCH_USER_DATA_URL
-        );
 
         const roomData = roomResponse.data;
-        const userData = userResponse.data;
 
         setRoomData(roomData);
-        console.log("room Data", roomData)
-        setUserData(userData);
+        console.log("room Data Correctly", roomData)
+
       } catch (error) {
         console.error("Error fetching data:", error);
-        setError("Error fetching data.");
+        setError("Error fetching data. fetch 2");
       }
     };
 
@@ -106,19 +101,13 @@ const CardForm = ({ roomNames, closeRoom,clickedRoom }) => {
   }, []);
 
   const handleChanges = (e) => {
-    const value = e.target.name === 'roomID' ? parseInt(e.target.value, 10) : e.target.value;
-  
-      if (selectedRoom) {
-        setSelectedRoom(prevState => ({
-          ...prevState,
-          roomID: selectedRoom.roomID 
-        }));
-      
-      }else {
-        setSelectedRoom({ ...selectedRoom, [e.target.name]: value });
-      }
-    
+    const { name, value } = e.target;
+    setSelectedRoom(prevState => ({
+      ...prevState,
+      [name]: value 
+    }));
   };
+  
   
   const handleBooking = async () => {
     setIsBookingDisabled(true);

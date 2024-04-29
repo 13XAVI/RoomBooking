@@ -168,12 +168,13 @@ export const UserInputs = [
 export const RoomInputs = [
   
     {     
-        id:1,
+        id: 1,
         label: "Room Location",
-        type:'text',
-        name:'roomLocation',
-        placeholder:'Location' ,
-        htmlFor:"roomLocation"
+        type: 'Select',
+        name: 'roomLocation',
+        placeholder: 'Select location',
+        options: ["floor 1", "floor 2", "floor 3","floor 4"],
+        htmlFor: "roomLocation"
     },
     {     
         id:2,
