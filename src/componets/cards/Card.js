@@ -27,6 +27,12 @@ const Card = ({ filteredRooms }) => {
   })
   const [isExpanded, setIsExpanded] = useState(false);
   const [lastAddedRoom, setLastAddedRoom] = useState([]);
+  const [messageTimeout, setMessageTimeout] = useState(null);
+  const clearMessages = () => {
+    setError(null);
+    setSuccessMessage(null);
+  };
+
 
   const cardContainerRef = useRef(null);
 
@@ -47,6 +53,7 @@ const Card = ({ filteredRooms }) => {
   useEffect(() => {
     const fetchData = async () => {
       const storedToken = authService.getToken();
+      console.log("Stored Token", storedToken)
 
       if (!storedToken) {
         setError("User not authenticated.");
@@ -54,13 +61,12 @@ const Card = ({ filteredRooms }) => {
       }
       try {
         const response = await axios.get(
-          process.env.REACT_APP_FETCH_EVENTS,
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${storedToken}`,
-            },
+          process.env.REACT_APP_FETCH_EVENTS, {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`,
+            "Access-Control-Allow-Origin": "*",
           }
+        }
         );
         const data = response.data;
         setBookingsData(data);
@@ -70,7 +76,7 @@ const Card = ({ filteredRooms }) => {
     };
 
     fetchData();
-  }, []);
+  }, [successMessage]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -78,6 +84,7 @@ const Card = ({ filteredRooms }) => {
         const response = await axios.get(
           process.env.REACT_APP_GET_ROOMNAMES, {
           headers: {
+            "Access-Control-Allow-Origin": "*",
             'Authorization': `Bearer ${localStorage.getItem('token')}`
           }
         }
@@ -164,7 +171,7 @@ const Card = ({ filteredRooms }) => {
     };
 
     fetchData();
-  }, []);
+  }, [successMessage]);
 
   console.log("Room Booking Information", roomData);
   const openDeleteDialog = (room) => {
@@ -218,9 +225,10 @@ const Card = ({ filteredRooms }) => {
       const data = response.data;
       setCanceledRoom(data);
       setSuccessMessage("Room Successfully Released");
+      setMessageTimeout(setTimeout(clearMessages, 3000));
       setTimeout(() => {
         window.location.reload()
-      }, 4000)
+      }, 3000);
 
     } catch (error) {
       setError(error.response.data.message);
@@ -267,12 +275,11 @@ const Card = ({ filteredRooms }) => {
                 {isExpanded && clickedRoom && clickedRoom.roomId === romm.roomId ? (
                   <>
                     <div className="listInforoom" onClick={() => collapseDisplay()}>
-                      {console.log(romm.booking.user.fullNames, "Debuggss RoomName")}
+
                       <li> Start Time: {formatDate(clickedRoom.booking.startTime)}</li>
                       <li> Room ID: {clickedRoom.roomId}</li>
                       <li> End Time: {formatDate(clickedRoom.booking.endTime)}</li>
                       <li> Status: {romm.booking.status}</li>
-                      <li> User Booked: {romm.booking.user.fullnames}</li>
                       <button onClick={() => openDeleteDialog(romm)}>Release Room</button>
                       <hr />
                     </div>

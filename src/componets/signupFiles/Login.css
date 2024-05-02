@@ -9,6 +9,14 @@
   max-height: 50vh;
 }
 
+.signup-link{
+  text-decoration: underline;
+  
+}
+.signup-link:hover{
+  cursor: pointer;
+}
+
 .login-form-container {
   display: flex;
   justify-content: center;
