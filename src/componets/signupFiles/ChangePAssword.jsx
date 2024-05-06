@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Navbar from "../navigationBar/navbar";
 import axios from "axios";
 import { useNavigate } from "react-router-dom"; // Import useNavigate hook
@@ -10,7 +10,7 @@ function ChangePassword(props) {
     password: "",
     confirmPassw: "",
   });
-  const email = useEmail();
+  const email = localStorage.getItem("email");
   const [error, setError] = useState(null);
   const [successMessage, setSuccessMessage] = useState("");
 
@@ -18,9 +18,9 @@ function ChangePassword(props) {
     setCredentials({ ...credentials, [e.target.name]: e.target.value });
   };
 
+  useEffect(() => {}, []);
   const changePassword = (e) => {
     e.preventDefault();
-
     axios
       .post(`${process.env.REACT_APP_CHANGE_PASSWORD}/${email}`, credentials)
       .then((response) => {

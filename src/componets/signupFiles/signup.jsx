@@ -2,9 +2,8 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./signup.scss";
 import useFetch from "../../hooks/useFetch";
-import 'bootstrap/dist/css/bootstrap.min.css';
+import "bootstrap/dist/css/bootstrap.min.css";
 import authService from "../Services/authService";
-
 
 function Signup() {
   const [error, setError] = useState(null);
@@ -16,13 +15,15 @@ function Signup() {
     empNo: "",
     mobileNo: "",
     position: "",
-    unitID: "" ,
+    unitID: "",
     department: "",
   });
 
   const { data: units } = useFetch({
     url: process.env.REACT_APP_FETCH_UNITS,
   });
+
+  console.log("units", units);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -64,7 +65,6 @@ function Signup() {
       console.error("Error during signup:", err);
       setError(err.message);
 
-
       setTimeout(() => {
         setError(null);
       }, 4000);
@@ -73,17 +73,13 @@ function Signup() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-  
+
     setCredentials((prevCredentials) => ({
       ...prevCredentials,
       [name]: name === "unitID" ? parseInt(value, 10) : value,
     }));
   };
-  
-  
-  
-  
-  
+
   return (
     <div className="container mt-5">
       <div className="row justify-content-center">
@@ -174,21 +170,20 @@ function Signup() {
                   Unit
                 </label>
                 <select
-  id="selectBox"
-  onChange={handleChange}
-  name="unitID" 
-  value={credentials.unitID}
-  className="form-select"
->
-  <option value="">Select a Unit</option>
-  {units &&
-    units.map((unit) => (
-      <option key={unit.unitID} value={unit.unitID}>
-        {unit.unitName}
-      </option>
-    ))}
-</select>
-
+                  id="selectBox"
+                  onChange={handleChange}
+                  name="unitID"
+                  value={credentials.unitID}
+                  className="form-select"
+                >
+                  <option value="">Select a Unit</option>
+                  {units &&
+                    units.map((unit) => (
+                      <option key={unit.unitID} value={unit.unitID}>
+                        {unit.unitName}
+                      </option>
+                    ))}
+                </select>
               </div>
             </div>
             <div className="mb-3">

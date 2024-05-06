@@ -170,6 +170,8 @@ export default function RoomReviewCard({ roomData }) {
     setFloors(roomLocations);
   }, []);
 
+  console.log("ROOM NAME ALLL", roomNames);
+
   const filterRooms = () => {
     if (selectedFloor === "All") {
       return roomNames;

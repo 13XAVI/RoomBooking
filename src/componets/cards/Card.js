@@ -20,6 +20,8 @@ const Card = ({ filteredRooms }) => {
   const [selectedRoom, setSelectedRoom] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [searchResult, setSearchResult] = useState(null);
   const [credentials, setCredentials] = useState({
     bookingID: "",
@@ -39,6 +41,8 @@ const Card = ({ filteredRooms }) => {
   const addRoom = (newRoom) => {
     setLastAddedRoom(newRoom);
   };
+
+
 
   useEffect(() => {
     if (roomNames.length > 0) {
@@ -171,9 +175,10 @@ const Card = ({ filteredRooms }) => {
     };
 
     fetchData();
-  }, [successMessage]);
+  }, []);
 
   console.log("Room Booking Information", roomData);
+  console.log("localstorage", localStorage.getItem("token"))
   const openDeleteDialog = (room) => {
     if (room && room.booking && room.booking.bookingID) {
       setClickedRoom(room);

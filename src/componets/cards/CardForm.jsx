@@ -25,6 +25,13 @@ const CardForm = ({ roomNames, closeRoom, clickedRoom }) => {
   const [selectedRoomImage, setSelectedRoomImage] = useState("");
   const [messageTimeout, setMessageTimeout] = useState(null);
   const [isBookingDisabled, setIsBookingDisabled] = useState(false);
+  // const [mounted, setMounted] = useState(false);
+
+  // useEffect(() => {
+  //   setMounted(true);
+
+  //   return () => {};
+  // }, []);
 
   const clearMessages = () => {
     setError(null);

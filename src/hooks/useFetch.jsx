@@ -11,7 +11,7 @@ function useFetch({ url }) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        console.log("Fetching data from:", url);
+        //console.log("Fetching data from:", url);
         const response = await axiosInstance.get(url);
 
         if (response && response.data) {

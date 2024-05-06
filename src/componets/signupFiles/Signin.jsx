@@ -94,6 +94,7 @@ const Signin = () => {
 
   const verifyOTP = () => {
     console.log("Email and otp", email);
+    localStorage.setItem("email", email);
     axios
       .post(`${process.env.REACT_APP_VERIFY_OTP}/${otp}/${email}`, {
         headers: {
@@ -108,7 +109,7 @@ const Signin = () => {
         }
       })
       .catch((error) => {
-        setError(error);
+        setError(error.message || "Failed to verify OTP");
       });
   };
 
@@ -137,7 +138,7 @@ const Signin = () => {
               className="input"
               onChange={handleChange}
             />
-            {error && <p className="error-message">{error.message}</p>}
+            {error && <p className="error-message">{error}</p>}
             <button type="submit" className="green-btn">
               Login
             </button>
@@ -197,11 +198,11 @@ const Signin = () => {
           </DialogContent>
         </Dialog>
 
-        {tokenPayLoad && (
+        {/* {tokenPayLoad && (
           <div>
             <Table tokenPayLoad={setTokenPayLoad} />
           </div>
-        )}
+        )} */}
       </div>
     </EmailProvider>
   );

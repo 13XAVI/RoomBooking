@@ -6,11 +6,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { CSVLink } from 'react-csv';
 import authService from '../../../Services/authService';
 import { faEdit, faPrint, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
-import ReactHTMLTableToExcel from 'react-html-table-to-excel'; 
-import Dialog from '@mui/material/Dialog'; 
-import DialogContent from '@mui/material/DialogContent'; 
-import UserEditPopup from './UserEditPopup'; 
-import EditRoom from '../../../cards/Editroom'; 
+import ReactHTMLTableToExcel from 'react-html-table-to-excel';
+import Dialog from '@mui/material/Dialog';
+import DialogContent from '@mui/material/DialogContent';
+import UserEditPopup from './UserEditPopup';
+import EditRoom from '../../../cards/Editroom';
+import './Table.scss'
 import { jwtDecode as jwt_decode } from 'jwt-decode';
 
 function RenderUsers({ title }) {
@@ -21,11 +22,11 @@ function RenderUsers({ title }) {
   const [successMessage, setSuccessMessage] = useState(null);
   const [page, setPage] = useState(1);
   const [allusers, setAllusers] = useState([]);
-  const [clickedUser,setClickedUser]=useState([])
+  const [clickedUser, setClickedUser] = useState([])
   const [editPopupVisible, setEditPopupVisible] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-const [userToDelete, setUserToDelete] = useState([]);
-const [nonPaginateUSer,setNonPaginateUSer]= useState([])
+  const [userToDelete, setUserToDelete] = useState([]);
+  const [nonPaginateUSer, setNonPaginateUSer] = useState([])
 
 
   const navigate = useNavigate();
@@ -42,10 +43,10 @@ const [nonPaginateUSer,setNonPaginateUSer]= useState([])
   const fetchData = useFetch({
     url: process.env.REACT_APP_FETCH_USER_DATA_URL,
   });
-  useEffect(()=>{
-    
-  },[])
-  
+  useEffect(() => {
+
+  }, [])
+
   useEffect(() => {
     if (fetchData.data) {
       setNonPaginateUSer(fetchData.data);
@@ -54,8 +55,8 @@ const [nonPaginateUSer,setNonPaginateUSer]= useState([])
 
     }
   }, [fetchData.data]);
-  
-  
+
+
 
   const HandleReturn = () => {
     try {
@@ -81,7 +82,7 @@ const [nonPaginateUSer,setNonPaginateUSer]= useState([])
   const handleNextPage = () => {
     setPage((prevPage) => Math.min(prevPage + 1, allusers.length));
   };
-  
+
   const handlePreviousPage = () => {
     setPage((prevPage) => Math.max(prevPage - 1, 1));
   };
@@ -106,31 +107,31 @@ const [nonPaginateUSer,setNonPaginateUSer]= useState([])
 
   const handleFormLoad = () => {
     setEditPopupVisible(!editPopupVisible);
-   
-};
+
+  };
 
   const handleEdit = (item) => {
-   console.log("user Item",item)
+    console.log("user Item", item)
     setClickedUser(item);
     setEditPopupVisible(true)
   };
-  
+
   const openDeleteDialog = (user) => {
-    console.log("consoledUnitxcvbv",user)
+    console.log("consoledUnitxcvbv", user)
     setUserToDelete(user);
     setDeleteDialogOpen(true);
   };
-  
+
   const closeDeleteDialog = () => {
     setDeleteDialogOpen(false);
-    setUserToDelete(null); 
+    setUserToDelete(null);
   };
-  
+
 
   const handleDelete = async (userToDelete) => {
     try {
       const deleteUrl = `${process.env.REACT_APP_DELETE_USER}/?staffID=${userToDelete.staffID}`;
-  
+
       const response = await fetch(deleteUrl,
         {
           method: 'delete',
@@ -138,19 +139,19 @@ const [nonPaginateUSer,setNonPaginateUSer]= useState([])
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${authService.getToken()}`
           },
-          
+
         }
-        
+
       );
-  
+
       if (response.status === 200) {
         setSuccessMessage('User deleted successfully.');
-  
-        const updatedUsers = nonPaginateUSer.filter((u) => u.staffID !== userToDelete.staffID );
-        console.log(updatedUsers,"sdfas",userToDelete)
-        setAllusers(HandleList(updatedUsers)); 
+
+        const updatedUsers = nonPaginateUSer.filter((u) => u.staffID !== userToDelete.staffID);
+        console.log(updatedUsers, "sdfas", userToDelete)
+        setAllusers(HandleList(updatedUsers));
         setNonPaginateUSer(updatedUsers)
-        
+
 
 
       } else {
@@ -161,41 +162,42 @@ const [nonPaginateUSer,setNonPaginateUSer]= useState([])
       setError(error.message || 'An error occurred while trying to delete the user.');
     }
   };
-  
-  
-  
 
-  console.log("all user",allusers)
+
+
+
+  console.log("all user", allusers)
 
   return (
-    <div className="card">
-      <h1 style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: '5px' }}>{title}</h1>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
-        <button type="button" className="sort-btn" onClick={handleSort}>
-          Sort by Date
-        </button>
-        <button type="button" className="sort-btn" onClick={HandleReturn}>
-          Return Home
-        </button>
-        <button type="button" className="sort-btn" onClick={printList}>
-          <FontAwesomeIcon icon={faPrint} className="s-icons" /> Print
-        </button>
-        <button>
-          <CSVLink data={allusers} filename={'users.csv'} className="sort-btn">
-            Export to CSV
-          </CSVLink>
-        </button>
-        <ReactHTMLTableToExcel
-          id="test-table-xls-button"
-          className="download-table-xls-button sort-btn"
-          table="excelTable"
-          filename="excelFile"
-          sheet="tablexls"
-          buttonText="Export to Excel"
-        />
-      </div>
 
-      <div className="table-responsive">
+    <div>
+      <h1 style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: '5px' }}>{title}</h1>
+      <div className='headingTable'>
+
+        <div style={{ display: 'flex', alignItems: 'center', }}>
+          <button type="button" className="sort-btn" onClick={handleSort}>
+            Sort by Date
+          </button>
+          <button type="button" className="sort-btn" onClick={HandleReturn}>
+            Return Home
+          </button>
+          <button type="button" className="sort-btn" onClick={printList}>
+            <FontAwesomeIcon icon={faPrint} className="s-icons" /> Print
+          </button>
+          <button>
+            <CSVLink data={allusers} filename={'users.csv'} className="sort-btn">
+              Export to CSV
+            </CSVLink>
+          </button>
+          <ReactHTMLTableToExcel
+            id="test-table-xls-button"
+            className="download-table-xls-button sort-btn"
+            table="excelTable"
+            filename="excelFile"
+            sheet="tablexls"
+            buttonText="Export to Excel"
+          />
+        </div>
         <input
           type="search"
           name="Search"
@@ -203,112 +205,121 @@ const [nonPaginateUSer,setNonPaginateUSer]= useState([])
           onChange={(e) => setUserData(e.target.value)}
           placeholder="Type to search..."
           className="form-control form-control-sm mb-2"
-          style={{ width: '800px', marginLeft: '20px', padding: 10, borderRadius: 20, marginTop: 10 }}
+          style={{ width: '500px', marginLeft: '20px', padding: 10, borderRadius: 20, marginTop: 10 }}
         />
-        <table id="excelTable" className="table table-striped table-bordered">
-          <thead className="thead-dark">
-            <tr>
-              <th>Staff ID</th>
-              <th>Full Name</th>
-              <th>Employee Number</th>
-              <th>User Number</th>
-              <th>Mobile Number</th>
-              <th>Email</th>
-              <th>User Status</th>
-              <th>Unit</th>
-              <th>Department</th>
-              <th>Login Fail Count</th>
-              <th>Position</th>
-              <th>Created At</th>
-              <th>Updated At</th>
-              <th>Username</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-          {allusers[page - 1] && allusers[page - 1]
-  .filter((item) => !item.isDeleted)
-  .filter((item) =>
-    userData.trim() === ''
-      ? true
-      : Object.values(item).some(
-          (value) =>
-            typeof value === 'string' && value.toLowerCase().includes(userData.toLowerCase())
-        )
-  )
-  .map((item) => (
-
-                
-                <tr key={item.staffID}>
-                  <td>{item.staffID}</td>
-                  <td>{item.fullnames}</td>
-                  <td>{item.empNo}</td>
-                  <td>{item.userNo}</td>
-                  <td>{item.mobileNo}</td>
-                  <td>{item.email}</td>
-                  <td>{item.userStatus}</td>
-                  <td>{item.units && item.units.unitName}</td>
-                  <td>{item.departments && item.departments.departmentName}</td>
-                  <td>{item.loginFailCount}</td>
-                  <td>{item.position}</td>
-                  <td>{item.createdAt}</td>
-                  <td>{item.updatedAt}</td>
-                  <td>{item.username}</td>
-                  <td className="button-cell">
-                    <button type="button" className="btn btn-success" onClick={() => handleEdit(item)}>
-                      <FontAwesomeIcon icon={faEdit} className="s-icons" />
-                    </button>
-                    <button type="button" className="btn btn-danger" onClick={() => openDeleteDialog(item)}>
-                      <FontAwesomeIcon icon={faTrashAlt} className="s-icons" />
-                    </button>
-
-                  </td>
-                </tr>
-              ))}
-          </tbody>
-        </table>
       </div>
+      <div className="card">
 
-      <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
-      <button onClick={handlePreviousPage} disabled={page === 1}>
-        Previous
-      </button>
-      <span style={{ marginTop:"20px"}}>Page {page} of {allusers.length}</span>
-      <button onClick={handleNextPage} disabled={page === allusers.length}>
-        Next
-      </button>
 
-      {editPopupVisible && (
-                            <Dialog open={editPopupVisible} onClose={handleFormLoad} maxWidth="80%" >
-                                <DialogContent>
-                                  
-                               
-                                        <div title={title}>
-                                        
-                                                <UserEditPopup title="Edit Room"   clickedUser={clickedUser} />
-                                            
-                                         
-                                        </div>
-                                    
-                                </DialogContent>
-                            </Dialog>
-                        )}
+        <div className="table-responsive">
 
-<Dialog open={deleteDialogOpen} onClose={closeDeleteDialog}>
-  <DialogContent>
-    <div>Are you sure you want to delete this user?</div>
-    <div style={{ marginTop: '20px', display: 'flex', justifyContent: 'flex-end' }}>
-      <button onClick={() => {
-        handleDelete(userToDelete); 
-        closeDeleteDialog();
-      }}>Delete</button>
-      <button onClick={closeDeleteDialog} style={{ marginLeft: '10px' }}>Cancel</button>
+          <table id="excelTable" className="table table-striped table-bordered">
+            <thead className="thead-dark">
+              <tr>
+                <th>Staff ID</th>
+                <th>Full Name</th>
+                <th>Employee Number</th>
+                <th>User Number</th>
+                <th>Mobile Number</th>
+                <th>Email</th>
+                <th>User Status</th>
+                <th>Unit</th>
+                <th>Department</th>
+                <th>Login Fail Count</th>
+                <th>Position</th>
+                <th>Created At</th>
+                <th>Updated At</th>
+                <th>Username</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {allusers[page - 1] && allusers[page - 1]
+                .filter((item) => !item.isDeleted)
+                .filter((item) =>
+                  userData.trim() === ''
+                    ? true
+                    : Object.values(item).some(
+                      (value) =>
+                        typeof value === 'string' && value.toLowerCase().includes(userData.toLowerCase())
+                    )
+                )
+                .map((item) => (
+
+
+                  <tr key={item.staffID}>
+                    <td>{item.staffID}</td>
+                    <td>{item.fullnames}</td>
+                    <td>{item.empNo}</td>
+                    <td>{item.userNo}</td>
+                    <td>{item.mobileNo}</td>
+                    <td>{item.email}</td>
+                    <td>{item.userStatus}</td>
+                    <td>{item.units && item.units.unitName}</td>
+                    <td>{item.position}</td>
+                    <td>{item.loginFailCount}</td>
+                    <td>{item.position}</td>
+                    <td>{item.createdAt}</td>
+                    <td>{item.updatedAt}</td>
+                    <td>{item.username}</td>
+                    <td className="button-cell">
+                      <button type="button" className="btn btn-success" onClick={() => handleEdit(item)}>
+                        <FontAwesomeIcon icon={faEdit} className="s-icons" />
+                      </button>
+                      <button type="button" className="btn btn-danger" onClick={() => openDeleteDialog(item)}>
+                        <FontAwesomeIcon icon={faTrashAlt} className="s-icons" />
+                      </button>
+
+                    </td>
+                  </tr>
+                ))}
+            </tbody>
+          </table>
+        </div>
+
+        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
+          <button onClick={handlePreviousPage} disabled={page === 1}>
+            Previous
+          </button>
+          <span style={{ marginTop: "20px" }}>Page {page} of {allusers.length}</span>
+          <button onClick={handleNextPage} disabled={page === allusers.length}>
+            Next
+          </button>
+
+          {editPopupVisible && (
+            <Dialog open={editPopupVisible} onClose={handleFormLoad} maxWidth="80%" >
+              <DialogContent>
+
+
+                <div title={title}>
+
+                  <UserEditPopup title="Edit Room" clickedUser={clickedUser} />
+
+
+                </div>
+
+              </DialogContent>
+            </Dialog>
+          )}
+
+          <Dialog open={deleteDialogOpen} onClose={closeDeleteDialog}>
+            <DialogContent>
+              <div>Are you sure you want to delete this user?</div>
+              <div style={{ marginTop: '20px', display: 'flex', justifyContent: 'flex-end' }}>
+                <button onClick={() => {
+                  handleDelete(userToDelete);
+                  closeDeleteDialog();
+                }}>Delete</button>
+                <button onClick={closeDeleteDialog} style={{ marginLeft: '10px' }}>Cancel</button>
+              </div>
+            </DialogContent>
+          </Dialog>
+
+        </div>
+      </div>
     </div>
-  </DialogContent>
-</Dialog>
 
-    </div>
-    </div>
+
   );
 }
 

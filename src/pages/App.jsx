@@ -26,6 +26,7 @@ import ContactP from "../componets/signupFiles/ContactP";
 import AddRoomName from "../componets/DashboardComponents/new/AddRoomName";
 import RenderRoom from "../componets/DashboardComponents/components/table/RenderRoom";
 import ChangePAssword from "../componets/signupFiles/ChangePAssword";
+import { EmailProvider } from "../componets/Services/EmailProvider";
 
 function App() {
   return (
@@ -34,7 +35,14 @@ function App() {
         <Route path="/">
           <Route index element={<Home />} />
           <Route path="Login" element={<Signin />} />
-          <Route path="ChangePassword" element={<ChangePAssword />} />
+          <Route
+            path="ChangePassword"
+            element={
+              <EmailProvider>
+                <ChangePAssword />
+              </EmailProvider>
+            }
+          />
           <Route
             path="RequestRom"
             element={

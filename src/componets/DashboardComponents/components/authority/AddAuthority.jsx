@@ -16,7 +16,6 @@ const AddAuthority = ({ data, url }) => {
   const [isUserListVisible, setIsUserListVisible] = useState(false);
   const [suggestedUsers, setSuggestedUsers] = useState([]);
   const [hideMessageTimeout, setHideMessageTimeout] = useState(null);
-  const [hasReloaded, setHasReloaded] = useState(false);
   const navigate = useNavigate();
 
   const { data: userAuthority } = useFetch({
@@ -52,13 +51,6 @@ const AddAuthority = ({ data, url }) => {
     setUserInp(selectedUser.fullnames);
     setIsUserListVisible(false);
   };
-
-  useEffect(() => {
-    if (hasReloaded) {
-      window.location.reload();
-      setHasReloaded(false);
-    }
-  }, [hasReloaded]);
 
   const handleAuthority = async (e) => {
     e.preventDefault();
