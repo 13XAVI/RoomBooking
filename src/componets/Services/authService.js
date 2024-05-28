@@ -6,30 +6,30 @@ import { jwtDecode as jwt_decode } from 'jwt-decode';
 
 
 
-const setToken = (token)=>{
-    console.log("Here is my token to set :",token)
-    localStorage.setItem('token',token);
+const setToken = (token) => {
+    console.log("Here is my token to set :", token)
+    localStorage.setItem('token', token);
     return token
 }
-const getToken = ()=>{
+const getToken = () => {
     const token = localStorage.getItem('token');
-    console.log("Token in get",token)
-    if(token){
+    console.log("Token in get", token)
+    if (token) {
         return token;
     }
     return null
 }
 
-const login=(credentials)=>{
-    
-    return axios.post(`${process.env.REACT_APP_SIGIN}`,credentials)
+const login = (credentials) => {
+
+    return axios.post(`${process.env.REACT_APP_SIGIN}`, credentials)
 }
 
-const getUserEmail = ()=>{
+const getUserEmail = () => {
     const token = getToken();
-    if(token){
+    if (token) {
         const payLoad = jwt_decode(token);
-        return payLoad?.email; 
+        return payLoad?.email;
     }
     return null
 }
@@ -57,27 +57,31 @@ const getUserRole = () => {
 const getUserInfo = () => {
     const token = getToken();
     if (token) {
-      const payLoad = jwt_decode(token);
-      return payLoad;
+        const payLoad = jwt_decode(token);
+        return payLoad;
     }
     return null;
-  }
+}
 
 
-const isLoggedIn = ()=>{
+const isLoggedIn = () => {
     const token = getToken();
-    if(token){
+    if (token) {
         const payLoad = jwt_decode(token);
-        const isLogin  = Date.now() < payLoad.exp * 1000;
+        const isLogin = Date.now() < payLoad.exp * 1000;
         return isLogin
     }
     return false
 }
 
+const removeToken = () => {
+    localStorage.removeItem("token")
+}
+
 const logOut = () => {
-  localStorage.clear();
+    localStorage.clear();
 }
 
 
 
-export  default{getToken,setToken,getUserInfo,login,getUserEmail,getUserRole,isLoggedIn,logOut}
+export default { getToken, removeToken, setToken, getUserInfo, login, getUserEmail, getUserRole, isLoggedIn, logOut }

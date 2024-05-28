@@ -10,7 +10,7 @@ function Home({ image0 }) {
       <div className="landing-container">
         <Navbar />
         <div className="hero-section">
-          <h1 className="hero-text"> Find Some Perfect Rooms </h1>
+          <h1 className="hero-text"> Perfect Rooms To Book </h1>
           <h3 className="hero-text2">
             Use our combined search bar to easily find rooms based on your
             preferences,
@@ -61,7 +61,7 @@ function Home({ image0 }) {
         </div>
 
         <div className="footers">
-          <p>&copy; 2023 Rwanda Revenue Authority. All Rights Reserved.</p>
+          <p>&copy; 2024 Room booking System. All Rights Reserved.</p>
         </div>
       </div>
     </div>

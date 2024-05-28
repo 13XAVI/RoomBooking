@@ -4,6 +4,7 @@
 
     .newcontainer{
         flex: 6;
+        position: relative;
         .top,.bottom{
             -webkit-backdrop-shadow: 2px 4px 10px rgba(0,0,0,0.47);
             box-shadow: 2px 4px 10px 1px rgba(201,201,201,0.47);
@@ -11,6 +12,7 @@
             margin: 20px;
             display: flex;
             margin-top: 40px;
+            
             h1{
                 color: gray;
             }
@@ -36,6 +38,7 @@
                     .formInput{
                         width: 40%;
                         margin-top: 40px;
+                       
                         
                         label{
                             display: flex;
@@ -99,6 +102,26 @@
           .error-message {
             color: red;
             margin-top: 10px; // Adjust the margin as needed
+          }
+
+          .addRoomName{
+            width: 130px;
+                        padding: 10px;
+                        border: none;
+                        color: white;
+                        background-color: #008080;
+                        cursor: pointer;
+                        margin-top: 10px;
+                        display: flex;
+                        align-items: center;
+                        position: absolute;
+                        top: 90px;
+                        right: 20px;
+                        margin-bottom: 20px;
+
+          }
+          .showRoomName{
+
           }
           
     }

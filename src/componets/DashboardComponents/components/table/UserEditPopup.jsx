@@ -1,15 +1,15 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import useFetch from '../../../../hooks/useFetch';
-import axios from 'axios';
-import authService from '../../../Services/authService';
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import useFetch from "../../../../hooks/useFetch";
+import axios from "axios";
+import authService from "../../../Services/authService";
 
-const UserEditPopup = ({ title,clickedUser}) => {
+const UserEditPopup = ({ title, clickedUser }) => {
   const [error, setError] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
   const [credentials, setCredentials] = useState({
     fullnames: clickedUser.fullnames,
-    email:clickedUser.email,
+    email: clickedUser.email,
     password: clickedUser.password,
     empNo: clickedUser.empNo,
     mobileNo: clickedUser.mobileNo,
@@ -24,49 +24,45 @@ const UserEditPopup = ({ title,clickedUser}) => {
     url: process.env.REACT_APP_FETCH_DEPARTMENT,
   });
 
-
-  
-
   const handleChange = (e) => {
     const { name, value } = e.target;
-  
+
     if (name === "unitID") {
-      const selectedUnit = units.find(unit => unit.unitID.toString() === value);
+      const selectedUnit = units.find(
+        (unit) => unit.unitID.toString() === value
+      );
       if (selectedUnit) {
-        setCredentials(prevCredentials => ({
+        setCredentials((prevCredentials) => ({
           ...prevCredentials,
           units: {
             unitID: selectedUnit.unitID,
-            unitName: selectedUnit.unitName
-          }
+            unitName: selectedUnit.unitName,
+          },
         }));
       }
     } else {
-      setCredentials(prevCredentials => ({
+      setCredentials((prevCredentials) => ({
         ...prevCredentials,
         [name]: value,
       }));
     }
   };
-  
-  
-  
-  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     const dataToSend = {
-      staffID: clickedUser.staffID, 
+      staffID: clickedUser.staffID,
       fullnames: credentials.fullnames,
       password: credentials.password,
       empNo: credentials.empNo,
-      userNo: clickedUser.userNo, 
+      userNo: clickedUser.userNo,
       mobileNo: credentials.mobileNo,
       email: credentials.email,
       position: credentials.position,
-      unitID: credentials.units.unitID
+      unitID: credentials.units.unitID,
     };
-  
+
     try {
       const response = await axios.put(
         process.env.REACT_APP_USER_UPDATE,
@@ -78,7 +74,7 @@ const UserEditPopup = ({ title,clickedUser}) => {
           },
         }
       );
-  
+
       if (response.status === 200) {
         setSuccessMessage("Account successfully updated!");
         setTimeout(() => {
@@ -94,20 +90,15 @@ const UserEditPopup = ({ title,clickedUser}) => {
       }, 4000);
     }
   };
-  
-  
-  
- 
 
   return (
-    <div className="container mt-5" style={{width:900}}>
+    <div className="container mt-5" style={{ width: 900 }}>
       <div className="row justify-content-center">
         <div className="col-lg-8" style={{}}>
           <form
             action=""
             className="user-form p-3 border"
             onSubmit={handleSubmit}
-            
           >
             <h2 className="text-center mb-4">Update Account</h2>
             <div className="row mb-3">
@@ -124,7 +115,6 @@ const UserEditPopup = ({ title,clickedUser}) => {
                   className="form-control"
                   onChange={handleChange}
                 />
-                
               </div>
               <div className="col-md-6">
                 <label htmlFor="email" className="form-label">
@@ -134,6 +124,7 @@ const UserEditPopup = ({ title,clickedUser}) => {
                   type="email"
                   placeholder="Your Email"
                   name="email"
+                  disabled
                   value={credentials.email}
                   required
                   className="form-control"
@@ -191,21 +182,19 @@ const UserEditPopup = ({ title,clickedUser}) => {
                   Unit
                 </label>
                 <select
-  onChange={handleChange}
-  name="unitID" 
-  value={credentials.units.unitID} 
-  className="form-select"
->
-  <option value="">Select a Unit</option>
-  {units && units.map((unit) => (
-    <option key={unit.unitID} value={unit.unitID}>
-      {unit.unitName}
-    </option>
-  ))}
-</select>
-
-
-
+                  onChange={handleChange}
+                  name="unitID"
+                  value={credentials.units.unitID}
+                  className="form-select"
+                >
+                  <option value="">Select a Unit</option>
+                  {units &&
+                    units.map((unit) => (
+                      <option key={unit.unitID} value={unit.unitID}>
+                        {unit.unitName}
+                      </option>
+                    ))}
+                </select>
               </div>
             </div>
             <div className="mb-3">

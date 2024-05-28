@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./Login.css";
 import authService from "../Services/authService";
@@ -20,12 +20,13 @@ const Signin = () => {
   });
   const [email, setEmail] = useState("");
   const [otp, setOtp] = useState("");
-  const [tokenPayLoad, setTokenPayLoad] = useState(null);
+  const [tokenPayLoad, setTokenPayLoad] = useState(authService.getToken());
   const [error, setError] = useState(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
 
   const navigate = useNavigate();
+
   const clearMessages = () => {
     setError(null);
     setSuccessMessage(null);
@@ -39,7 +40,7 @@ const Signin = () => {
 
       if (response?.data.accessToken) {
         const accessToken = response?.data?.accessToken;
-        const setTokenResult = authService.setToken(accessToken);
+        const setToken = authService.setToken(accessToken);
 
         const payLoad = jwt_decode(accessToken);
         setTokenPayLoad(payLoad);
@@ -47,6 +48,11 @@ const Signin = () => {
         payLoad?.authorities === "admin"
           ? navigate("/Dashboard")
           : navigate("/RequestRom");
+
+        if (payLoad.exp * 1000 < Date.now()) {
+          authService.removeToken();
+          navigate("/login");
+        }
       }
 
       setError(null);
@@ -58,6 +64,32 @@ const Signin = () => {
       console.log(err);
     }
   };
+
+  const LoginFun = useEffect(() => {
+    const token = authService.getToken();
+    if (token) {
+      try {
+        const decodedToken = jwt_decode(token);
+        setTokenPayLoad(decodedToken);
+        console.log("Decoded token on app init:", decodedToken);
+
+        if (decodedToken.exp * 1000 < Date.now()) {
+          authService.removeToken();
+          navigate("/login");
+        } else {
+          if (decodedToken.authorities === "admin") {
+            navigate("/Dashboard");
+          } else if (decodedToken.authorities === "user") {
+            navigate("/RequestRoom");
+          }
+        }
+      } catch (error) {
+        console.error("Error decoding token on app init:", error);
+        authService.removeToken();
+        navigate("/login");
+      }
+    }
+  }, [navigate]);
 
   const handleChange = (e) => {
     setCredentials({ ...credentials, [e.target.name]: e.target.value });

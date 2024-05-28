@@ -13,6 +13,7 @@ import Signup from "../../signupFiles/signup";
 import AddRoomName from "./AddRoomName";
 import Widget from "../components/widget/WidgetApp";
 import authService from "../../Services/authService";
+import { Dialog, DialogContent } from "@mui/material";
 
 function New({ title }) {
   const [selectedImage, setSelectedImage] = useState(null);
@@ -22,6 +23,7 @@ function New({ title }) {
   const [showSignup, setShowSignup] = useState(false);
   const [showRoom, setShowRoom] = useState(false);
   const [disableButton, setDisableButton] = useState(false);
+  const [showRoomName, setShowRoomName] = useState(false);
 
   const handleSignupClick = () => {
     setShowSignup(true);
@@ -157,6 +159,13 @@ function New({ title }) {
     }
   };
 
+  const HandleClickedName = () => {
+    setShowRoomName(true);
+  };
+  const HandleCloseName = () => {
+    setShowRoomName(false);
+  };
+
   return (
     <div className="new">
       <SideBar
@@ -243,6 +252,9 @@ function New({ title }) {
                 {error && <div className="error-message">{error}</div>}
                 <button type="submit">Send</button>
               </form>
+              <button className="addRoomName" onClick={HandleClickedName}>
+                + Give Name
+              </button>
             </div>
           </div>
         )}
@@ -254,6 +266,12 @@ function New({ title }) {
               {showRoom && <AddRoomName onClose={handleRoomFormClose} />}
             </div>
           </div>
+        )}
+
+        {showRoomName && (
+          <Dialog open={showRoomName} onClose={HandleCloseName}>
+            <DialogContent>{showRoomName && <AddRoomName />}</DialogContent>
+          </Dialog>
         )}
       </div>
     </div>
