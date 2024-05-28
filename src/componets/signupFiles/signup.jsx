@@ -4,6 +4,7 @@ import "./signup.scss";
 import useFetch from "../../hooks/useFetch";
 import "bootstrap/dist/css/bootstrap.min.css";
 import authService from "../Services/authService";
+import { Navigate } from "react-router";
 
 function Signup() {
   const [error, setError] = useState(null);
@@ -45,6 +46,7 @@ function Signup() {
         setSuccessMessage("Account successfully created!");
         setTimeout(() => {
           setSuccessMessage(null);
+          window.location.reload();
         }, 4000);
 
         console.log("successfully saved");

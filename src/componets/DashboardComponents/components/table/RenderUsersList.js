@@ -13,6 +13,7 @@ import UserEditPopup from './UserEditPopup';
 import EditRoom from '../../../cards/Editroom';
 import './Table.scss'
 import { jwtDecode as jwt_decode } from 'jwt-decode';
+import axios from 'axios';
 
 function RenderUsers({ title }) {
   const [selectedItem, setSelectedItem] = useState(null);
@@ -132,17 +133,7 @@ function RenderUsers({ title }) {
     try {
       const deleteUrl = `${process.env.REACT_APP_DELETE_USER}/?staffID=${userToDelete.staffID}`;
 
-      const response = await fetch(deleteUrl,
-        {
-          method: 'delete',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${authService.getToken()}`
-          },
-
-        }
-
-      );
+      const response = await axiosInstance.delete(deleteUrl);
 
       if (response.status === 200) {
         setSuccessMessage('User deleted successfully.');
